@@ -30,3 +30,11 @@ function sum(array) {
 }
 
 module.exports = sum;
+
+/*
+function solve () { 
+    return function (arr) { 
+        // your solution for arr 
+    } 
+}
+ */

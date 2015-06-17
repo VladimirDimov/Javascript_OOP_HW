@@ -7,28 +7,28 @@
 */
 
 function findPrimes(start, end) {
-	var i, j, 
-	result = [];
+	var i, j,
+		result = [];
 
-	if (!Number(start)) {
-		throw "Invalid min value";
-	};
 	start = Number(start);
+	if (isNaN(start)) {
+		throw Error("Invalid min value");
+	};
 
 	if (start < 2) {
 		start = 2;
 	};
 
-	if (!Number(end)) {
-		throw "Invalid mx value";
-	};
 	end = Number(end);
-
-	if (start>end) {
-		throw "Invalid arguments";
+	if (isNaN(end)) {
+		throw Error("Invalid mx value");
 	};
 
-	for (var i = start; i <= end; i+=1) {
+	if (start > end) {
+		throw Error("Invalid arguments");
+	};
+
+	for (var i = start; i <= end; i += 1) {
 		if (isPrime(i)) {
 			result.push(i);
 		};
@@ -36,10 +36,10 @@ function findPrimes(start, end) {
 
 	return result;
 
-	function isPrime(num){
+	function isPrime(num) {
 		var sqrInt = Math.sqrt(num) | 0;
 
-		for (var j = 2; j <= sqrInt; j+=1) {
+		for (var j = 2; j <= sqrInt; j += 1) {
 			if (num % j == 0) {
 				return false;
 			};
@@ -51,4 +51,4 @@ function findPrimes(start, end) {
 
 module.exports = findPrimes;
 
-// console.log(findPrimes(1, 5)); 
+// console.log(findPrimes('1', '5'));
