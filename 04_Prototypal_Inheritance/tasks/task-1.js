@@ -60,6 +60,29 @@ Outputs:
 */
 
 function solve() {
+	if (!Array.prototype.find) {
+		Array.prototype.find = function(predicate) {
+			if (this == null) {
+				throw new TypeError('Array.prototype.find called on null or undefined');
+			}
+			if (typeof predicate !== 'function') {
+				throw new TypeError('predicate must be a function');
+			}
+			var list = Object(this);
+			var length = list.length >>> 0;
+			var thisArg = arguments[1];
+			var value;
+
+			for (var i = 0; i < length; i++) {
+				value = list[i];
+				if (predicate.call(thisArg, value, i, list)) {
+					return value;
+				}
+			}
+			return undefined;
+		};
+	}
+
 	var Validators = (function() {
 		function validateType(str) {
 			if (!(/^[a-zA-Z\d]+$/.test(str))) {
@@ -149,14 +172,26 @@ function solve() {
 			addAttribute: function(name, value) {
 				var index;
 				if (this.attributes.some(function(el, i) {
-						index = i;
-						return el.name == name;
-					})) {
+					index = i;
+					return el.name == name;
+				})) {
 					this.attributes[index].value = value;
 				} else {
 					this.attributes.push(Object.create(Attribute).init(name, value));
 				};
 				return this;
+			},
+			removeAttribute: function(attributeName) {
+				var attributeIndex = this.attributes.find(function(element) {
+					return element.name == attributeName;
+				});
+
+				if (attributeIndex) {
+					this.attributes.splice(attributeIndex, 1);
+					return this;
+				} else {
+					throw new Error('Attribute is missing');
+				};
 			},
 			get innerHTML() {
 				var result = '';
@@ -204,48 +239,54 @@ function solve() {
 	return domElement;
 }
 
-solve();
+try {
+	var domElement = solve();
+	// var meta = Object.create(domElement)
+	// 	.init('meta')
+	// 	.addAttribute('charset', 'utf-8')
+	// 	.addAttribute('charset', 'utf-8');
 
-// try {
-// 	var domElement = solve();
-// 	var meta = Object.create(domElement)
-// 		.init('meta')
-// 		.addAttribute('charset', 'utf-8')
-// 		.addAttribute('charset', 'utf-8');
+	// var head = Object.create(domElement)
+	// 	.init('head')
+	// 	.appendChild(meta)
 
-// 	var head = Object.create(domElement)
-// 		.init('head')
-// 		.appendChild(meta)
+	// var div = Object.create(domElement)
+	// 	.init('div')
+	// 	.addAttribute('style', 'font-size: 42px');
 
-// 	var div = Object.create(domElement)
-// 		.init('div')
-// 		.addAttribute('style', 'font-size: 42px');
+	// div.content = 'Hello, world!';
 
-// 	div.content = 'Hello, world!';
+	// var body = Object.create(domElement)
+	// 	.init('body')
+	// 	.appendChild(div)
+	// 	.addAttribute('id', 'cuki')
+	// 	.addAttribute('bgcolor', '#012345');
 
-// 	var body = Object.create(domElement)
-// 		.init('body')
-// 		.appendChild(div)
-// 		.addAttribute('id', 'cuki')
-// 		.addAttribute('bgcolor', '#012345');
+	// var root = Object.create(domElement)
+	// 	.init('html')
+	// 	.appendChild(head)
+	// 	.appendChild(body);
 
-// 	var root = Object.create(domElement)
-// 		.init('html')
-// 		.appendChild(head)
-// 		.appendChild(body);
+	// var domElement = solve();
+	// var root = Object.create(domElement)
+	// 	.init('NqmaTakufTag')
+	// 	.addAttribute('xyz', 'some value')
+	// 	.addAttribute('zzz', '')
+	// 	.addAttribute('abc', 'other value');
 
-// 	console.log(root.innerHTML);
+	// root.removeAttribute('xyz');
 
-// } catch (err) {
-// 	console.log(err);
-// }
+	var root = Object.create(domElement)
+		.init('table')
+		.addAttribute('style', 'something: beautiful')
+		.removeAttribute('style');
 
-var domElement = solve();
-var root = Object.create(domElement)
-	.init('NqmaTakufTag')
-	.addAttribute('xyz', 'some value')
-	.addAttribute('zzz', '')
-	.addAttribute('abc', 'other value');
+	console.log(root.innerHTML);
 
-console.log(root.innerHTML);
+} catch (err) {
+	console.log(err);
+}
+
+
+
 module.exports = solve;

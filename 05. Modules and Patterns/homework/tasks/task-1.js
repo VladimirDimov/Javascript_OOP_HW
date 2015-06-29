@@ -49,7 +49,7 @@ function solve() {
 
 	var Validators = {
 		validateTitle: function(title) {
-			if (!(/^([^ ]+(\s{1})?[^ ]+)+$/.test(title))) {
+			if (!(/^([^ ]+(\s{1})?[^ ]*)+[^ ]$/.test(title))) {
 				throw Error('Invalid title');
 			};
 		},
