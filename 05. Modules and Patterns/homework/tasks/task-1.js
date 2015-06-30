@@ -49,6 +49,12 @@ function solve() {
 
 	var Validators = {
 		validateTitle: function(title) {
+			if (title[title.length - 1] == ' ') {
+				throw new Error('Tite cannot end with a space.');
+			};
+			if (title.indexOf('  ') != -1) {
+				throw new Error('Invalid consecutive spaces in a title.')
+			};
 			if (!(/^([^ ]+(\s{1})?[^ ]*)+[^ ]$/.test(title))) {
 				throw Error('Invalid title');
 			};
@@ -78,14 +84,17 @@ function solve() {
 			};
 		}
 	};
+
 	var Student = (function() {
 		var Student = {
 			init: function(name) {
 				var names;
+
 				names = parseNames(name);
 				this.firstname = names[0];
 				this.lastname = names[1];
 				this.id = generateId();
+
 				return this;
 			},
 			toString: function() {
@@ -97,9 +106,11 @@ function solve() {
 
 		function parseNames(name) {
 			var names = name.split(' ');
+
 			if (names.length != 2) {
 				throw new Error('Student must have two names');
 			};
+
 			Validators.validatePersonName(names[0]);
 			Validators.validatePersonName(names[1]);
 
@@ -173,8 +184,8 @@ function solve() {
 		function isExistingStudentId(id) {
 			id = Number(id);
 			if (!this._students.some(function(element) {
-					return element.id === id;
-				})) {
+				return element.id === id;
+			})) {
 				throw new Error('Not existing student id');
 			};
 		}
